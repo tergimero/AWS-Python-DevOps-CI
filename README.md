@@ -1,84 +1,80 @@
-AWS DevOps CI Pipeline — Python Project
+# AWS DevOps CI Pipeline Project
 
-Project Overview
+## Project Overview
 
-This project implements a Continuous Integration (CI) pipeline using Amazon Web Services (AWS). It integrates AWS CodeCommit, AWS CodeBuild and AWS CodePipeline to automate the process of retrieving source code, executing Python unit tests and preparing build artifacts.
+This project demonstrates the implementation of an automated Continuous Integration (CI) pipeline using Amazon Web Services (AWS).
 
-AWS Services Used
+The pipeline integrates AWS CodeCommit, AWS CodeBuild, AWS CodePipeline, and Amazon S3 to automate source code retrieval, building, and artifact storage.
 
-AWS CodeCommit: Stores and manages the Python application's source code.
+## Technologies Used
 
-AWS CodeBuild: Executes the build instructions defined in buildspec.yml.
+- AWS CodeCommit — Source code management
+- AWS CodeBuild — Automated build execution
+- AWS CodePipeline — CI pipeline orchestration
+- Amazon S3 — Artifact storage
+- AWS IAM — Access and permissions management
+- Python — Application development
 
-AWS CodePipeline: Orchestrates the source and build stages.
+## Pipeline Configuration
 
-AWS IAM: Manages service roles and access permissions.
+**Pipeline Name:** PythonDevOpsPipeline
 
-Amazon CloudWatch: Records build execution logs.
+**AWS Region:** eu-north-1 (Europe, Stockholm)
 
-Amazon S3: Stores pipeline artifacts.
+### Source Stage
 
-Repository Structure
+The pipeline retrieves application source code from AWS CodeCommit.
 
-PythonDevOpsRepo/
-├── app.py
-├── test_app.py
-└── buildspec.yml
+Status: Succeeded
 
-IAM Roles
+### Build Stage
 
-1. PythonDevOpsCodeBuildRole
+AWS CodeBuild executes the configured build process.
 
-Trusted service: codebuild.amazonaws.com
+Status: Succeeded
 
-Purpose: Allows AWS CodeBuild to access the source repository, execute the build and publish logs.
+### Artifact Storage
 
-The build execution permissions include access to the CodeCommit repository and the relevant CloudWatch Logs resources. S3 artifact permissions should be verified against the final pipeline configuration.
+Build artifacts are stored in an Amazon S3 bucket under:
 
-2. PythonDevOpsCodePipelineRole
+`PythonDevOpsPipeline/BuildArtif/`
 
-Trusted service: codepipeline.amazonaws.com
+Three build artifact objects were observed in the S3 console.
 
-Purpose: Allows AWS CodePipeline to retrieve source code, invoke AWS CodeBuild and manage pipeline artifacts stored in S3.
+## IAM Roles and Security
 
-Build Environment
+AWS IAM provides permissions for the services involved in the pipeline.
 
-AWS Region: eu-north-1
+The project uses service permissions to support source retrieval, build execution, and artifact storage.
 
-Build project: PythonDevOpsBuild
+**IAM role names and attached permissions:** To be documented after checking the IAM console.
 
-Build image: aws/codebuild/standard:8.0
+## Environment Variables
 
-Runtime: Python 3.12
+The CodeBuild environment-variable configuration should be recorded here.
 
-Build specification: buildspec.yml
+**Variables configured:** To be verified in AWS CodeBuild.
 
-Privileged mode: Disabled
+Do not include passwords, access keys, or secret values in this document.
 
-No custom environment variables were required for the Python application. AWS CodeBuild automatically provides system environment variables during execution.
+## Pipeline Validation
 
-Build and Testing
+The AWS CodePipeline console confirmed successful execution of both stages:
 
-The buildspec.yml file instructs CodeBuild to execute the Python unit tests using:
+- Source: Succeeded
+- Build: Succeeded
 
-python -m unittest discover -v
+The S3 console also confirmed the presence of build artifact objects.
 
-The build also copies app.py into an output directory for artifact packaging.
+## Evidence
 
-Results
+Screenshots collected for the project:
 
-The initial standalone AWS CodeBuild execution completed successfully, with one unit test passing.
+1. AWS CodePipeline showing successful Source and Build stages.
+2. Amazon S3 showing the BuildArtif folder and generated artifact objects.
 
-AWS CodePipeline was subsequently created with two stages:
+## Conclusion
 
-Source — AWS CodeCommit
+This project demonstrates how AWS managed DevOps services can automate source retrieval and build execution while storing generated artifacts in Amazon S3.
 
-Build — AWS CodeBuild
-
-Both stages completed successfully. A subsequent execution also processed an updated version of app.py and completed successfully.
-
-Conclusion
-
-The project demonstrates a functioning AWS Continuous Integration pipeline. Source code is retrieved from a managed repository, tested in a managed build environment and processed through AWS CodePipeline.
-
-The implementation reduces manual build and testing effort and provides a foundation for future deployment automation.
+The successful pipeline execution provides evidence of a functioning CI workflow.
